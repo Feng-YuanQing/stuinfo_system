@@ -5,7 +5,7 @@
 #include"stdio.h"
 #include"stdlib.h"
 #include"string.h"
-#define N  10
+#define N  10000
 struct  StuInfo
 {
     char id[20];
