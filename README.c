@@ -1,3 +1,4 @@
+```c
 #include"stdio.h"
 #include"stdlib.h"
 #include"string.h"
@@ -570,3 +571,4 @@ void  Delete(struct StuInfo *p,int n)
     printf("\n\n\n请按任意键返回主菜单!\n");
     menu(p,n);
 }
+```
