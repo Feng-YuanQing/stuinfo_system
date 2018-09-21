@@ -1,4 +1,7 @@
-```c
+* 
+	`简易宿舍管理系统`
+=================================
+```c	
 #include"stdio.h"
 #include"stdlib.h"
 #include"string.h"
