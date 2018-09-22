@@ -5,7 +5,7 @@
 #include"stdio.h"
 #include"stdlib.h"
 #include"string.h"
-#define N  10000
+#define N  10
 struct  StuInfo
 {
     char id[20];
@@ -23,6 +23,7 @@ void Delete(struct StuInfo *p,int n);
 void Show(struct StuInfo *p,int n);
 void Save(struct StuInfo *p,int n);
 void menu(struct StuInfo *p,int n);
+void sort(struct StuInfo *p,int n,int mb);
 void Halfsearch(struct StuInfo *p,char *key,int low,int high,int mem,int count);
 void Exit();
 void Welcome();
@@ -44,17 +45,40 @@ void init(struct StuInfo *p)
 {
     p=NULL;
 }
-void sort(struct StuInfo *p,int n)
+void sort(struct StuInfo *p,int n,int mb)
 {
     int i,j;
     struct StuInfo temp;
-    for(i=0;i<n-1;i++)
-	{
-		for(j=1;j<n-i;j++)
-			if(strcmp((p+j-1)->id,(p+j)->id)>0)
-		{temp=*(p+j-1); *(p+j-1)=*(p+j); *(p+j)=temp;}
-	}
-    Save(p,n);
+    switch(mb)
+    {
+        case 1:
+            for(i=0;i<n-1;i++)
+            {
+                for(j=1;j<n-i;j++)
+                    if(strcmp((p+j-1)->id,(p+j)->id)>0)
+                    {temp=*(p+j-1); *(p+j-1)=*(p+j); *(p+j)=temp;}
+            }
+            Save(p,n);
+            break;
+        case 2:
+            for(i=0;i<n-1;i++)
+            {
+                for(j=1;j<n-i;j++)
+                    if(strcmp((p+j-1)->name,(p+j)->name)>0)
+                    {temp=*(p+j-1); *(p+j-1)=*(p+j); *(p+j)=temp;}
+            }
+            Save(p,n);
+            break;
+        case 3:
+            for(i=0;i<n-1;i++)
+            {
+                for(j=1;j<n-i;j++)
+                    if(strcmp((p+j-1)->dorm,(p+j)->dorm)>0)
+                    {temp=*(p+j-1); *(p+j-1)=*(p+j); *(p+j)=temp;}
+            }
+            Save(p,n);
+            break;
+    }
 }
 void Halfsearch(struct StuInfo *p,char *key,int low,int high,int mem,int count)
 {
@@ -62,10 +86,10 @@ void Halfsearch(struct StuInfo *p,char *key,int low,int high,int mem,int count)
     switch(mem)
     {
         case 1:
-            if(low>high&&count==1)  printf("\n该学生不存在！");
+            if(low>high&&count==0)  printf("\n该学生不存在！");
             else if(low>high);
             else {
-                mid = (low + high) / 2;
+                    mid = (low + high) / 2;
                 if(strcmp((p+mid)->id,key)==0)
                     {
                         count++;
@@ -76,10 +100,10 @@ void Halfsearch(struct StuInfo *p,char *key,int low,int high,int mem,int count)
                 else return Halfsearch(p,key,mid+1,high,mem,count);
             }break;
         case 2:
-            if(low>high&&count==1) printf("\n该学生不存在！");
+            if(low>high&&count==0) printf("\n该学生不存在！");
             else if(low>high);
             else {
-                mid=(low + high) / 2;
+                   mid=(low + high) / 2;
                 if(strcmp((p+mid)->name,key)==0)
                 {
                     count++;
@@ -90,10 +114,10 @@ void Halfsearch(struct StuInfo *p,char *key,int low,int high,int mem,int count)
                 }
             break;
         case 3:
-            if(low>high&&count==1) printf("\n该学生不存在！");
+            if(low>high&&count==0) printf("\n该学生不存在！");
             else if(low>high);
             else {
-                mid=(low + high) / 2;
+                   mid=(low + high) / 2;
                 if(strcmp((p+mid)->dorm,key)==0)
                 {
                     count++;
@@ -102,30 +126,28 @@ void Halfsearch(struct StuInfo *p,char *key,int low,int high,int mem,int count)
                 if(strcmp((p+mid)->dorm,key)>0) return Halfsearch(p,key,low,mid-1,mem,count);
                 else return Halfsearch(p,key,mid+1,high,mem,count);
                 }
-
     }
 
 }
 void Check(struct StuInfo *p,int n)
 {
-     int i,t,flag,low=0,count=0;
+     int t,low=0,count=0;
      char s1[30];
      system("COLOR 1f");
-     printf("\n                =================================\n");
+     printf("\n               =================================\n");
      printf("                |         1.按学号查询          |\n");
      printf("                |         2.按姓名查询          |\n");
      printf("                |         3.按宿舍查询          |\n");
      printf("                |         4.退出本菜单          |\n");
      printf("                =================================\n");
-    while(1)
-    {
+     while(1)
+     {
 
          printf("\n                请输入子菜单编号: \n");
          scanf("%d",&t);
          switch(t)
          {
             case 1:
-                i=0;
                 printf("     请输入要查询的学生的学号: \n");
                 scanf("%s",s1);
                 printf("\n  学生学号    学生姓名    宿舍号 \n");
@@ -158,31 +180,32 @@ void Check(struct StuInfo *p,int n)
 }
 void Input(struct StuInfo *p)
 {
-        int i,flag=1;
-        while(flag)
-        {
-                flag=0;
-                printf("  请输入需要创建信息的学生人数（1-1000):\n");
-                scanf("%d",&n);
-                if(n<1||n>1000)
-                {
-                        flag=1;
-                        printf("\n\n  输入错误，检查后请重新输入!\n");
-                }
-         }
-        for(i=0;i<n;i++)
-        {
-            printf("  请输入第%d个学生的基本信息:\n",i+1);
-            printf("\n  请输入学号:\n\n");
-            scanf("%s",(p+i)->id);
-            printf("\n  请输入姓名:\n\n");
-            scanf("%s",(p+i)->name);
-            printf("\n  请输入宿舍号:\n");
-            scanf("%s",(p+i)->dorm);
-        }
-        printf("完成!\n");
-        system("pause");
+    int i,flag=1;
+    while(flag)
+    {
+            flag=0;
+            printf("  请输入需要创建信息的学生人数（1-1000):\n");
+            scanf("%d",&n);
+            if(n<1||n>1000)
+            {
+                    flag=1;
+                    printf("\n\n  输入错误，检查后请重新输入!\n");
+            }
+     }
+    for(i=0;i<n;i++)
+    {
+        printf("  请输入第%d个学生的基本信息:\n",i+1);
+        printf("\n  请输入学号:\n\n");
+        scanf("%s",(p+i)->id);
+        printf("\n  请输入姓名:\n\n");
+        scanf("%s",(p+i)->name);
+        printf("\n  请输入宿舍号:\n");
+        scanf("%s",(p+i)->dorm);
+    }
+    printf("完成!\n");
+    system("pause");
     printf("\n请按任意键返回主菜单!\n");
+    Save(p,n);
     menu(p,n);
 }
 
@@ -199,8 +222,9 @@ void Save(struct StuInfo *p,int n)
         {
             if(fwrite(&stu[i],sizeof(struct StuInfo),1,fp)!=1)
             printf("文件输入错误!\n");
+            //fwrite("\r\n",2,1,fp);
         }
-           fclose(fp);
+        fclose(fp);
 }
 void Add(struct StuInfo *p,int n)
 {
@@ -232,7 +256,6 @@ void Add(struct StuInfo *p,int n)
         printf("\n  请输入第%d个学生的学生宿舍号:\n",a);
         scanf("%s",(p+a-1)->dorm);
       if(flag==0)i++;
-
     }
     n=n+m;
     printf("输入完毕!\n\n");
@@ -243,6 +266,7 @@ void Add(struct StuInfo *p,int n)
 }
 void Revise(struct StuInfo *p,int n)
 {
+
     system("COLOR 6f");
     int i,num,count,t,l;
     char s1[30],s2[30];
@@ -444,12 +468,12 @@ void Revise(struct StuInfo *p,int n)
             printf("  请在1--4之间选择正确代号\n");}break;
     }
 
-
+    Save(p,n);
 }
 void menu(struct StuInfo *p,int n)
 {
     int num;
-    sort(p,n);
+    sort(p,n,1);
     system("cls");
     system("COLOR f2");
     printf(" ╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╧╧╧╧╧╧╧╧╧╧╧╧╧╧╧╧╧╧╧╧╧╧╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪╪\n");
@@ -523,22 +547,47 @@ void Welcome()
 }
 void Show(struct StuInfo *p,int n)
 {
-      int i;
+      int i,mb;
       FILE *fp;
       if((fp=fopen("studentinfo.txt","r+"))==NULL)
-     {
+      {
           printf("打开文件时错误!请按任意键退出!\n");
           system("pause");
           exit(0);
-     }
-      printf("       所有学生的信息为：\n \n");
-      printf("\n学生学号     学生姓名      宿舍号      \n");
-      printf("===================================\n");
-      for(i=0;i<n;i++)
-      {     fread(&stu[i],sizeof(struct StuInfo),1,fp);
-            printf("%6s %7s %6s\n",(p+i)->id,(p+i)->name,(p+i)->dorm);
       }
-
+      printf("  请选择排序方式：\n");
+      printf("\n  1.学生学号；  2.学生姓名；  3. 宿舍号 \n");
+      scanf("%d",&mb);
+      switch(mb)
+      {
+        case 1:
+              sort(p,n,mb);
+              printf("       所有学生的信息为：\n \n");
+              printf("\n学生学号     学生姓名      宿舍号      \n");
+              printf("===================================\n");
+              for(i=0;i<n;i++)
+              {     fread(&stu[i],sizeof(struct StuInfo),1,fp);
+                    printf("%6s %7s %6s\n",(p+i)->id,(p+i)->name,(p+i)->dorm);
+              }break;
+        case 2:
+            sort(p,n,mb);
+              printf("       所有学生的信息为：\n \n");
+              printf("\n学生学号     学生姓名      宿舍号      \n");
+              printf("===================================\n");
+              for(i=0;i<n;i++)
+              {     fread(&stu[i],sizeof(struct StuInfo),1,fp);
+                    printf("%6s %7s %6s\n",(p+i)->id,(p+i)->name,(p+i)->dorm);
+              }break;
+        case 3:
+            sort(p,n,mb);
+              printf("       所有学生的信息为：\n \n");
+              printf("\n学生学号     学生姓名      宿舍号      \n");
+              printf("===================================\n");
+              for(i=0;i<n;i++)
+              {     fread(&stu[i],sizeof(struct StuInfo),1,fp);
+                    printf("%6s %7s %6s\n",(p+i)->id,(p+i)->name,(p+i)->dorm);
+              }break;
+    }
     fclose(fp);Save(p,n);
     system("pause");
     system("cls");
@@ -574,4 +623,5 @@ void  Delete(struct StuInfo *p,int n)
     printf("\n\n\n请按任意键返回主菜单!\n");
     menu(p,n);
 }
+
 ```
